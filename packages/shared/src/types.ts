@@ -31,4 +31,5 @@ export interface Site {
     html: string;
     authorId: string;
     createdAt: string;
+    snippet?: string;
 }

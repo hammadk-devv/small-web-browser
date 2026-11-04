@@ -34,6 +34,14 @@ export class NavigationStack {
     }
 
     /**
+     * Exposes the cursor's current position without leaking the internal field.
+     * Used by the UI to highlight the active entry in the history panel.
+     */
+    get currentIndex(): number {
+        return this.cursor;
+    }
+
+    /**
      * Navigates to a new page. 
      * Truncates any "forward" history, simulating real browser behavior.
      */

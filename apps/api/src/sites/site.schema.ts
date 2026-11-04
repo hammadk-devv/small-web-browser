@@ -18,6 +18,9 @@ export class Site {
     @Prop({ required: true })
     textContent: string;
 
+    @Prop({ required: true })
+    snippet: string;
+
     @Prop({ required: true, index: true })
     authorId: string;
 

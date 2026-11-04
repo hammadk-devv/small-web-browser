@@ -4,31 +4,65 @@
 import { Site } from '@small-web/shared';
 import { useBrowser } from '@/context/BrowserContext';
 
-export function SearchResults({ results, onClose }: { results: Site[], onClose: () => void }) {
-    const browser = useBrowser();
+interface SearchResultsProps {
+    results: Site[];
+    onClose: () => void;
+}
+
+export function SearchResults({ results, onClose }: SearchResultsProps) {
+    const { navigate, searchQuery } = useBrowser();
 
     return (
         <div className="panel-container">
             <div className="panel-header">
-                <h2>Search Results</h2>
-                <button className="btn-close" onClick={onClose}>Back to Page</button>
+                <div>
+                    <h2>Search Results</h2>
+                    <p className="panel-subtitle">
+                        {results.length} {results.length === 1 ? 'page' : 'pages'} found
+                        {searchQuery ? ` for "${searchQuery}"` : ''}
+                    </p>
+                </div>
+                <button
+                    type="button"
+                    className="btn-secondary"
+                    onClick={onClose}
+                    aria-label="Close search results"
+                >
+                    Close
+                </button>
             </div>
 
             {results.length === 0 ? (
-                <p>No pages found matching your query.</p>
+                <div className="panel-empty-state">
+                    <p className="empty-title">No results found</p>
+                    <p className="empty-description">
+                        Try searching with different keywords or check the exact web address.
+                    </p>
+                </div>
             ) : (
-                results.map((site) => (
-                    <div
-                        key={site.address}
-                        className="result-item"
-                        onClick={() => browser.navigate(site.address)}
-                    >
-                        <h3>{site.title}</h3>
-                        <div className="address">{site.address}</div>
-                        {/* We strip the HTML tags for the snippet in the backend, but here we can just truncate the raw text for now */}
-                        <div className="snippet">{site.title} — published by {site.authorId}</div>
-                    </div>
-                ))
+                <div className="search-results-list">
+                    {results.map((site) => (
+                        <div
+                            key={site.address}
+                            className="result-card"
+                            onClick={() => navigate(site.address)}
+                            role="button"
+                            tabIndex={0}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter' || e.key === ' ') {
+                                    e.preventDefault();
+                                    navigate(site.address);
+                                }
+                            }}
+                        >
+                            <div className="result-header">
+                                <h3 className="result-title">{site.title || 'Untitled Site'}</h3>
+                                <span className="result-address">{site.address}</span>
+                            </div>
+                            <p className="result-snippet">{site.snippet || ''}</p>
+                        </div>
+                    ))}
+                </div>
             )}
         </div>
     );

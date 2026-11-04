@@ -27,10 +27,13 @@ async function seed() {
         console.log('📄 Inserting sites...');
         const sitesToInsert = SEED_SITES.map(site => {
             const safeHtml = sanitizeHtml(site.html, SANITIZE_OPTIONS);
+            const textContent = extractTextContent(safeHtml);
+            const snippet = textContent.length > 180 ? textContent.substring(0, 180) + '...' : textContent;
             return {
                 ...site,
                 html: safeHtml,
-                textContent: extractTextContent(safeHtml),
+                textContent,
+                snippet,
                 createdAt: new Date(),
                 updatedAt: new Date(),
             };
