@@ -1,0 +1,17 @@
+{
+  "name": "small-web-browser",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A miniature internet and browser built with Next.js, NestJS, MongoDB, and TypeScript.",
+  "scripts": {
+    "dev:api": "pnpm --filter api start:dev",
+    "dev:web": "pnpm --filter web dev",
+    "seed": "pnpm --filter api seed",
+    "build:api": "pnpm --filter api build",
+    "build:web": "pnpm --filter web build",
+    "test": "pnpm -r test"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
