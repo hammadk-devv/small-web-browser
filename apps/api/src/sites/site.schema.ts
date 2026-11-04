@@ -15,15 +15,16 @@ export class Site {
     @Prop({ required: true })
     html: string;
 
-    // Stripped version of the HTML for efficient full-text search
     @Prop({ required: true })
     textContent: string;
 
     @Prop({ required: true, index: true })
     authorId: string;
+
+    // Explicitly declare the timestamp so TypeScript knows about it
+    @Prop()
+    createdAt: Date;
 }
 
 export const SiteSchema = SchemaFactory.createForClass(Site);
-
-// Compound text index to search by Title AND Body Content simultaneously
 SiteSchema.index({ title: 'text', textContent: 'text' });
