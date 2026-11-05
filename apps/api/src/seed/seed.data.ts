@@ -1,13 +1,13 @@
 // apps/api/src/seed/seed.data.ts
 
 export const SEED_SITES = [
-    // ── 1. TIDEPOOL.ZZ ─────────────────────────────────────────────────────────
-    // Warm Editorial: real hero photo, floated card photo, cream paper, Georgia typography
-    {
-        address: 'tidepool.zz',
-        title: 'Tidepool Field Notes',
-        authorId: 'person_mira',
-        html: `
+  // ── 1. TIDEPOOL.ZZ ─────────────────────────────────────────────────────────
+  // Warm Editorial: full-bleed hero, centered overlay text, cream paper, Georgia typography
+  {
+    address: 'tidepool.zz',
+    title: 'Tidepool Field Notes',
+    authorId: 'person_mira',
+    html: `
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   .site-wrap {
@@ -24,9 +24,9 @@ export const SEED_SITES = [
   .hero-container {
     position: relative;
     width: 100%;
-    height: 60vh;
-    min-height: 380px;
-    max-height: 520px;
+    height: 45vh;
+    min-height: 300px;
+    max-height: 420px;
     overflow: hidden;
   }
   .hero-img {
@@ -40,10 +40,12 @@ export const SEED_SITES = [
     position: absolute;
     inset: 0;
     background: linear-gradient(180deg, rgba(10,61,98,0.2) 0%, rgba(10,61,98,0.8) 100%);
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
-    padding: 48px 40px;
+  }
+  .hero-inner{
+   position: absolute;
+   bottom: 40px;
+   left:40px;
+   max-width: 1000px;  
   }
   .hero-label {
     display: inline-block;
@@ -141,8 +143,10 @@ export const SEED_SITES = [
   <div class="hero-container">
     <img src="/assets/tidepool-hero.jpg" alt="Tidepool ocean rocks" class="hero-img" />
     <div class="hero-overlay">
+     <div class="hero-inner">
       <span class="hero-label">Field Journal — Issue 04</span>
       <h1 class="hero-title">Tidepool Field Notes</h1>
+      </div>
     </div>
   </div>
   <div class="body-wrap">
@@ -160,15 +164,14 @@ export const SEED_SITES = [
   </div>
 </div>
         `.trim(),
-    },
+  },
 
-    // ── 2. SHORE.ZZ ─────────────────────────────────────────────────────────────
-    // Data Dashboard: Split 40/60 layout, full-height sidebar image, flora thumb, pulse animation
-    {
-        address: 'shore.zz',
-        title: 'The Shoreline',
-        authorId: 'person_mira',
-        html: `
+  // ── 2. SHORE.ZZ ─────────────────────────────────────────────────────────────
+  {
+    address: 'shore.zz',
+    title: 'The Shoreline',
+    authorId: 'person_mira',
+    html: `
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   .site-wrap {
@@ -347,15 +350,14 @@ export const SEED_SITES = [
   </div>
 </div>
         `.trim(),
-    },
+  },
 
-    // ── 3. GARDEN.ZZ ─────────────────────────────────────────────────────────────
-    // Botanical Journal: hero banner, 3 square photo cards, cream paper, hover lift
-    {
-        address: 'garden.zz',
-        title: 'Digital Garden',
-        authorId: 'person_alex',
-        html: `
+  // ── 3. GARDEN.ZZ ─────────────────────────────────────────────────────────────
+  {
+    address: 'garden.zz',
+    title: 'Digital Garden',
+    authorId: 'person_alex',
+    html: `
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   .site-wrap {
@@ -512,15 +514,14 @@ export const SEED_SITES = [
   </div>
 </div>
         `.trim(),
-    },
+  },
 
-    // ── 4. WEATHER.ZZ ───────────────────────────────────────────────────────────
-    // Mission Control: darkened hero, blurred fixed background texture, monospace green
-    {
-        address: 'weather.zz',
-        title: 'Local Weather',
-        authorId: 'person_sam',
-        html: `
+  // ── 4. WEATHER.ZZ ───────────────────────────────────────────────────────────
+  {
+    address: 'weather.zz',
+    title: 'Local Weather',
+    authorId: 'person_sam',
+    html: `
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   .site-wrap {
@@ -670,15 +671,14 @@ export const SEED_SITES = [
   </div>
 </div>
         `.trim(),
-    },
+  },
 
-    // ── 5. LIBRARY.ZZ ───────────────────────────────────────────────────────────
-    // Vintage Book Archive: split hero on left, card thumbnail, sepia palette, bg texture
-    {
-        address: 'library.zz',
-        title: 'The Small Library',
-        authorId: 'person_sam',
-        html: `
+  // ── 5. LIBRARY.ZZ ───────────────────────────────────────────────────────────
+  {
+    address: 'library.zz',
+    title: 'The Small Library',
+    authorId: 'person_sam',
+    html: `
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   .site-wrap {
@@ -820,15 +820,14 @@ export const SEED_SITES = [
   </div>
 </div>
         `.trim(),
-    },
+  },
 
-    // ── 6. MUSIC.ZZ ─────────────────────────────────────────────────────────────
-    // Dark Night Archive: dark hero, album art card with neon shadow, bg texture, waveform
-    {
-        address: 'music.zz',
-        title: 'Ambient Sounds',
-        authorId: 'person_alex',
-        html: `
+  // ── 6. MUSIC.ZZ ─────────────────────────────────────────────────────────────
+  {
+    address: 'music.zz',
+    title: 'Ambient Sounds',
+    authorId: 'person_alex',
+    html: `
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   .site-wrap {
@@ -980,15 +979,14 @@ export const SEED_SITES = [
   </div>
 </div>
         `.trim(),
-    },
+  },
 
-    // ── 7. ARCHIVE.ZZ ───────────────────────────────────────────────────────────
-    // Brutalist Newspaper: grayscale hero, grayscale thumbnail, marquee ticker, thick rules
-    {
-        address: 'archive.zz',
-        title: 'Old Archives',
-        authorId: 'person_charlie',
-        html: `
+  // ── 7. ARCHIVE.ZZ ───────────────────────────────────────────────────────────
+  {
+    address: 'archive.zz',
+    title: 'Old Archives',
+    authorId: 'person_charlie',
+    html: `
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   .site-wrap {
@@ -1117,15 +1115,14 @@ export const SEED_SITES = [
   </div>
 </div>
         `.trim(),
-    },
+  },
 
-    // ── 8. RADIO.ZZ ─────────────────────────────────────────────────────────────
-    // Pirate Broadcast: hero with expanding CSS signal rings, burgundy & gold palette
-    {
-        address: 'radio.zz',
-        title: 'Pirate Radio',
-        authorId: 'person_charlie',
-        html: `
+  // ── 8. RADIO.ZZ ─────────────────────────────────────────────────────────────
+  {
+    address: 'radio.zz',
+    title: 'Pirate Radio',
+    authorId: 'person_charlie',
+    html: `
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   .site-wrap {
@@ -1250,15 +1247,14 @@ export const SEED_SITES = [
   </div>
 </div>
         `.trim(),
-    },
+  },
 
-    // ── 9. KITCHEN.ZZ ───────────────────────────────────────────────────────────
-    // Rustic Recipe Cards: hero, 3 square photo cards with flip hover effect, terracotta palette
-    {
-        address: 'kitchen.zz',
-        title: 'The Kitchen',
-        authorId: 'person_mira',
-        html: `
+  // ── 9. KITCHEN.ZZ ───────────────────────────────────────────────────────────
+  {
+    address: 'kitchen.zz',
+    title: 'The Kitchen',
+    authorId: 'person_mira',
+    html: `
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   .site-wrap {
@@ -1371,7 +1367,7 @@ export const SEED_SITES = [
   <div class="body-wrap">
     <div class="season">Seasonal Notes — Late Autumn</div>
     <h1>The Coastal Kitchen</h1>
-    <p class="intro">Simple food prepared according to the tides and garden harvest. Sourdough baked with sea salt, dried kombu dashi, and wild coastal herbs.</p>
+    <p class="intro">Simple food prepared according to the tides and garden harvest. Sourdough baked with sea salt,seaweed harvested at low tide, dried kombu dashi, and wild coastal herbs.</p>
     <div class="recipe-grid">
       <div class="recipe-card">
         <img src="/assets/kitchen-card-1.jpg" alt="Sourdough bread loaf" class="recipe-img" />
@@ -1403,15 +1399,14 @@ export const SEED_SITES = [
   </div>
 </div>
         `.trim(),
-    },
+  },
 
-    // ── 10. OBSERVATORY.ZZ ──────────────────────────────────────────────────────
-    // Deep Space Terminal: hero with viewfinder crosshairs, fixed background grid, green terminal
-    {
-        address: 'observatory.zz',
-        title: 'Star Observatory',
-        authorId: 'person_sam',
-        html: `
+  // ── 10. OBSERVATORY.ZZ ──────────────────────────────────────────────────────
+  {
+    address: 'observatory.zz',
+    title: 'Star Observatory',
+    authorId: 'person_sam',
+    html: `
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   .site-wrap {
@@ -1530,29 +1525,29 @@ export const SEED_SITES = [
   </div>
 </div>
         `.trim(),
-    },
+  },
 ];
 
 /**
  * Deterministic seed history. Addresses match SEED_SITES above.
  */
 export const SEED_HISTORY: { personId: string, address: string, title: string, minutesAgo: number }[] = [
-    // Alice's trail
-    { personId: 'person_alice', address: 'tidepool.zz', title: 'Tidepool Field Notes', minutesAgo: 120 },
-    { personId: 'person_alice', address: 'shore.zz',    title: 'The Shoreline',        minutesAgo: 115 },
-    { personId: 'person_alice', address: 'tidepool.zz', title: 'Tidepool Field Notes', minutesAgo: 110 },
-    { personId: 'person_alice', address: 'broken-link.zz', title: 'Nowhere',           minutesAgo: 105 },
+  // Alice's trail
+  { personId: 'person_alice', address: 'tidepool.zz', title: 'Tidepool Field Notes', minutesAgo: 120 },
+  { personId: 'person_alice', address: 'shore.zz', title: 'The Shoreline', minutesAgo: 115 },
+  { personId: 'person_alice', address: 'tidepool.zz', title: 'Tidepool Field Notes', minutesAgo: 110 },
+  { personId: 'person_alice', address: 'broken-link.zz', title: 'Nowhere', minutesAgo: 105 },
 
-    // Diana's trail
-    { personId: 'person_diana', address: 'garden.zz',      title: 'Digital Garden',       minutesAgo: 300 },
-    { personId: 'person_diana', address: 'library.zz',     title: 'The Small Library',    minutesAgo: 290 },
-    { personId: 'person_diana', address: 'archive.zz',     title: 'Old Archives',         minutesAgo: 280 },
-    { personId: 'person_diana', address: 'radio.zz',       title: 'Pirate Radio',         minutesAgo: 270 },
-    { personId: 'person_diana', address: 'shore.zz',       title: 'The Shoreline',        minutesAgo: 260 },
-    { personId: 'person_diana', address: 'tidepool.zz',    title: 'Tidepool Field Notes', minutesAgo: 250 },
-    { personId: 'person_diana', address: 'kitchen.zz',     title: 'The Kitchen',          minutesAgo: 240 },
-    { personId: 'person_diana', address: 'weather.zz',     title: 'Local Weather',        minutesAgo: 230 },
-    { personId: 'person_diana', address: 'observatory.zz', title: 'Star Observatory',     minutesAgo: 220 },
-    { personId: 'person_diana', address: 'music.zz',       title: 'Ambient Sounds',       minutesAgo: 210 },
-    { personId: 'person_diana', address: 'garden.zz',      title: 'Digital Garden',       minutesAgo: 200 },
+  // Diana's trail
+  { personId: 'person_diana', address: 'garden.zz', title: 'Digital Garden', minutesAgo: 300 },
+  { personId: 'person_diana', address: 'library.zz', title: 'The Small Library', minutesAgo: 290 },
+  { personId: 'person_diana', address: 'archive.zz', title: 'Old Archives', minutesAgo: 280 },
+  { personId: 'person_diana', address: 'radio.zz', title: 'Pirate Radio', minutesAgo: 270 },
+  { personId: 'person_diana', address: 'shore.zz', title: 'The Shoreline', minutesAgo: 260 },
+  { personId: 'person_diana', address: 'tidepool.zz', title: 'Tidepool Field Notes', minutesAgo: 250 },
+  { personId: 'person_diana', address: 'kitchen.zz', title: 'The Kitchen', minutesAgo: 240 },
+  { personId: 'person_diana', address: 'weather.zz', title: 'Local Weather', minutesAgo: 230 },
+  { personId: 'person_diana', address: 'observatory.zz', title: 'Star Observatory', minutesAgo: 220 },
+  { personId: 'person_diana', address: 'music.zz', title: 'Ambient Sounds', minutesAgo: 210 },
+  { personId: 'person_diana', address: 'garden.zz', title: 'Digital Garden', minutesAgo: 200 },
 ];

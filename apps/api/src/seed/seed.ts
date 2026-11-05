@@ -2,8 +2,7 @@
 import { MongoClient } from 'mongodb';
 import * as dotenv from 'dotenv';
 import { SEED_SITES, SEED_HISTORY } from './seed.data';
-import { extractTextContent, SANITIZE_OPTIONS } from '../common/sanitize.config';
-import sanitizeHtml from 'sanitize-html';
+import { extractTextContent, sanitizeWithStyles } from '../common/sanitize.config';
 
 dotenv.config();
 
@@ -26,7 +25,9 @@ async function seed() {
         // 2. Insert Sites
         console.log('📄 Inserting sites...');
         const sitesToInsert = SEED_SITES.map(site => {
-            const safeHtml = sanitizeHtml(site.html, SANITIZE_OPTIONS);
+            // Use sanitizeWithStyles so <style> blocks survive the sanitizer.
+            // sanitize-html strips <style> contents by default even when allowed.
+            const safeHtml = sanitizeWithStyles(site.html);
             const textContent = extractTextContent(safeHtml);
             const snippet = textContent.length > 180 ? textContent.substring(0, 180) + '...' : textContent;
             return {

@@ -1,3 +1,14 @@
 packages:
   - 'apps/*'
   - 'packages/*'
+
+# Allow installation of recently published packages (pnpm v11+ safety gate).
+# Without this, pnpm install fails with ERR_PNPM_MINIMUM_RELEASE_AGE_VIOLATION
+# on packages published in the last 24 hours.
+minimumReleaseAge: 0
+
+# Pre-approve build scripts for dependencies that need them (esbuild, watcher).
+# Without this, pnpm v11+ refuses to run postinstall and exits with an error.
+onlyBuiltDependencies:
+  - esbuild
+  - '@parcel/watcher'

@@ -4,8 +4,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Site, SiteDocument } from './site.schema';
 import { PublishSitePayload, Site as SiteType } from '@small-web/shared';
-import { SANITIZE_OPTIONS, extractTextContent } from '../common/sanitize.config';
-import sanitizeHtml from 'sanitize-html';
+import { sanitizeWithStyles, extractTextContent } from '../common/sanitize.config';
 
 @Injectable()
 export class SitesService {
@@ -14,11 +13,16 @@ export class SitesService {
     /**
      * Publishes a new site. Sanitizes the HTML and extracts text for search.
      * Computes server-side snippet to avoid sending full HTML for search listings.
-     * Time: O(n) where n is the length of the HTML string (due to sanitization).
+     * 
+     * Uses `sanitizeWithStyles` (instead of raw `sanitizeHtml`) to guarantee
+     * that `<style>` blocks inside the HTML are preserved through the sanitization
+     * pipeline. The library strips them by default.
+     * 
+     * Time: O(n) where n is the length of the HTML string.
      * Space: O(n) for the sanitized strings.
      */
     async publish(payload: PublishSitePayload): Promise<SiteType> {
-        const safeHtml = sanitizeHtml(payload.html, SANITIZE_OPTIONS);
+        const safeHtml = sanitizeWithStyles(payload.html);
         const textContent = extractTextContent(safeHtml);
         const snippet = textContent.length > 180 ? textContent.substring(0, 180) + '...' : textContent;
 

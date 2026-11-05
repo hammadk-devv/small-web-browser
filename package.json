@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "description": "A miniature internet and browser built with Next.js, NestJS, MongoDB, and TypeScript.",
+  "packageManager": "pnpm@9.15.0",
   "scripts": {
     "dev:api": "pnpm --filter api start:dev",
     "dev:web": "pnpm --filter web dev",

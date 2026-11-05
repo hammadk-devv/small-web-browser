@@ -56,7 +56,7 @@ export function SandboxedPage({ html, title }: SandboxedPageProps) {
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             box-sizing: border-box;
-            contain: layout style;
+            contain: style;
           }
 
           body:not(:has(.site-wrap)) {

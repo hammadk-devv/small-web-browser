@@ -1,81 +1,67 @@
 // apps/api/src/common/sanitize.config.ts
 import sanitizeHtml from 'sanitize-html';
 
-/**
- * Security boundary for untrusted HTML.
- * 
- * STRATEGY:
- *   1. Allow structural, typography, and styling elements (needed for real websites)
- *   2. Strip ALL execution vectors (script, iframe, object, embed, form controls)
- *   3. Reject inline style="" attributes (see allowedAttributes) — CSS-based XSS defense
- *   4. Validate image sources to /assets/ or http(s) only — blocks javascript: and path traversal
- *   5. Reject style blocks that use viewport-covering CSS (position: fixed, inset: 0) — UX defense
- *      so a malicious publisher cannot render an opaque full-screen overlay over "legit content."
- * 
- * Note: `<style>` blocks ARE allowed because legitimate sites need CSS. Risk is mitigated
- * because: (a) inline style attrs are still stripped, (b) all HTML renders inside a
- * sandboxed iframe with no same-origin access, (c) SandboxedPage.tsx adds `contain: layout
- * style` to the iframe body to scope user CSS.
- */
 export const SANITIZE_OPTIONS: sanitizeHtml.IOptions = {
     allowedTags: [
         'p', 'br', 'strong', 'em', 'u', 's', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
         'ul', 'ol', 'li', 'blockquote', 'a', 'code', 'pre', 'span', 'div', 'hr',
         'style', 'header', 'nav', 'main', 'footer', 'section', 'article', 'img'
     ],
-    allowVulnerableTags: true, // required for <style>; explained in header comment
+    allowVulnerableTags: true,
     allowedAttributes: {
         a: ['href', 'title', 'class'],
         img: ['src', 'alt', 'class'],
         '*': ['class'],
     },
-    allowedSchemes: ['http', 'https'], // blocks javascript:, data:, vbscript:, etc.
+    allowedSchemes: ['http', 'https'],
     disallowedTagsMode: 'discard',
     exclusiveFilter: (frame) => {
-        // ── 1. Reject execution + frame + form tags ──────────────────────────
         if (['script', 'iframe', 'object', 'embed', 'form', 'input', 'button', 'textarea', 'select'].includes(frame.tag)) {
             return true;
         }
-
-        // ── 2. Validate <img src> ────────────────────────────────────────────
-        // Only /assets/ (our bundled seed images) or explicit http(s) URLs are allowed.
-        // Blocks: `javascript:`, `data:`, `vbscript:`, `//evil.com/...`, path traversal.
         if (frame.tag === 'img' && frame.attribs.src) {
             const src = frame.attribs.src;
-            const isSafe =
-                src.startsWith('/assets/') ||
-                src.startsWith('http://') ||
-                src.startsWith('https://');
+            const isSafe = src.startsWith('/assets/') || src.startsWith('http://') || src.startsWith('https://');
             if (!isSafe) return true;
         }
-
-        // ── 3. Reject viewport-covering <style> blocks (UX defense) ──────────
-        // The regex blocks the OBVIOUS overlay patterns: position: fixed, position: sticky,
-        // and inset: 0. It is not a complete CSS sanitizer — a determined attacker can
-        // still break their own page — but it prevents the most common "blank screen" attack.
-        // Real defense-in-depth comes from `contain: layout style` on the iframe body in
-        // SandboxedPage.tsx, which scopes ALL user CSS to the iframe document.
         if (frame.tag === 'style' && frame.text) {
             const css = frame.text.toLowerCase();
-            const hasViewportCover =
-                /position\s*:\s*(fixed|sticky)/.test(css) ||
-                /inset\s*:\s*0/.test(css);
-            if (hasViewportCover) return true;
+            if (/position\s*:\s*fixed/.test(css)) return true;
         }
-
         return false;
     },
 };
 
 /**
- * Builds a searchable plain-text index from sanitized HTML.
+ * A wrapper around sanitizeHtml that explicitly protects <style> tags.
  * 
- * Strips <style> and <script> blocks (with content) BEFORE sanitizing so
- * CSS code cannot bleed into search results. Then strips all remaining tags
- * to produce clean prose.
+ * The `sanitize-html` library strips the contents of <style> tags even when 
+ * the tag is allowed because it treats them as non-text nodes. 
  * 
- * Time: O(n) where n is the HTML string length. Called once at publish time.
+ * To work around this, we extract <style> blocks into a temporary array,
+ * replace them with a unique placeholder string, sanitize the HTML, and then
+ * restore the styles.
  */
+export function sanitizeWithStyles(html: string): string {
+    const styleBlocks: string[] = [];
+
+    // Replace <style>...</style> with placeholders
+    const withPlaceholders = html.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, (match) => {
+        styleBlocks.push(match);
+        return `___STYLE_PLACEHOLDER_${styleBlocks.length - 1}___`;
+    });
+
+    // Sanitize the HTML (placeholders are safe text)
+    let sanitized = sanitizeHtml(withPlaceholders, SANITIZE_OPTIONS);
+
+    // Restore the original style blocks
+    sanitized = sanitized.replace(/___STYLE_PLACEHOLDER_(\d+)___/g, (_, index) => {
+        return styleBlocks[parseInt(index, 10)];
+    });
+
+    return sanitized;
+}
+
 export function extractTextContent(html: string): string {
     const withoutStylesOrScripts = html
         .replace(/<style[^>]*>[\s\S]*?<\/style>/gi, ' ')
