@@ -278,16 +278,26 @@ export function BrowserProvider({ children }: { children: React.ReactNode }) {
     }, []);
 
     /**
-     * Navigates to HOME screen without clearing the session's NavigationStack.
+     * Navigates to HOME screen, recording home:// on the NavigationStack
+     * so Back correctly returns to the previously viewed site.
      */
     const openHome = useCallback(() => {
+        // Push home:// onto stack so Back correctly returns to the last site
+        if (stackRef.current.current?.address !== 'home://') {
+            stackRef.current.push({
+                address: 'home://',
+                title: 'The Small Web',
+                visitedAt: new Date().toISOString(),
+            });
+        }
         setPreviousViewState('HOME');
         setCurrentSite(null);
         setCurrentError(null);
         setSearchQuery('');
         setSearchResults(null);
         setViewState('HOME');
-    }, []);
+        forceUpdate();
+    }, [forceUpdate]);
 
     /**
      * Switches user persona, resetting session stack and returning to HOME.

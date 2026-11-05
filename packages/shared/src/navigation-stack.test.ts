@@ -81,6 +81,20 @@ describe('NavigationStack', () => {
         expect(stack.jumpTo(99)).toBeNull();
     });
 
+    it('handles home navigation and back/forward traversing accurately', () => {
+        stack.push(entry('home://'));
+        stack.push(entry('tidepool.zz'));
+        stack.push(entry('library.zz'));
+        stack.push(entry('home://'));
+
+        expect(stack.current?.address).toBe('home://');
+        expect(stack.back()?.address).toBe('library.zz');
+        expect(stack.back()?.address).toBe('tidepool.zz');
+        expect(stack.forward()?.address).toBe('library.zz');
+        expect(stack.forward()?.address).toBe('home://');
+        expect(stack.canGoForward).toBe(false);
+    });
+
     it('toArray returns an immutable copy', () => {
         stack.push(entry('a.zz'));
         const arr = stack.toArray();

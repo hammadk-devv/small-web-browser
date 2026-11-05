@@ -256,6 +256,11 @@ export function BrowserShell() {
                 {/* View: Home Screen */}
                 {browser.viewState === 'HOME' && (
                     <div className="home-screen view-animated-container" key="home-view">
+                        <div className="bg-blob-container" aria-hidden="true">
+                            <div className="bg-blob bg-blob-1" />
+                            <div className="bg-blob bg-blob-2" />
+                            <div className="bg-blob bg-blob-3" />
+                        </div>
                         <div className="home-container">
                             <div className="home-badge">Decentralized Web Explorer</div>
                             <h1 className="home-title">The Small Web</h1>
@@ -266,14 +271,14 @@ export function BrowserShell() {
                             <div className="home-actions">
                                 <button
                                     type="button"
-                                    className="btn-primary"
+                                    className="btn-premium"
                                     onClick={browser.openPublish}
                                 >
                                     Publish a Site
                                 </button>
                                 <button
                                     type="button"
-                                    className="btn-secondary"
+                                    className="btn-premium-outline"
                                     onClick={browser.openHistory}
                                 >
                                     Browsing History

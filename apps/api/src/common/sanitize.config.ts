@@ -10,17 +10,34 @@ import sanitizeHtml from 'sanitize-html';
 export const SANITIZE_OPTIONS: sanitizeHtml.IOptions = {
     allowedTags: [
         'p', 'br', 'strong', 'em', 'u', 's', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6',
-        'ul', 'ol', 'li', 'blockquote', 'a', 'code', 'pre', 'span', 'div', 'hr', 'style', 'header', 'nav', 'main', 'footer', 'section', 'article'
+        'ul', 'ol', 'li', 'blockquote', 'a', 'code', 'pre', 'span', 'div', 'hr', 'style', 'header', 'nav', 'main', 'footer', 'section', 'article', 'img'
     ],
+    // <style> is required for user-authored CSS. Risk mitigated because:
+    //   1. inline style="" attributes are still stripped (see allowedAttributes)
+    //   2. all HTML renders inside sandbox="allow-scripts" iframe (no same-origin access)
+    allowVulnerableTags: true,
     allowedAttributes: {
         a: ['href', 'title', 'class'],
+        img: ['src', 'alt', 'class'],
         '*': ['class'],
     },
     allowedSchemes: ['http', 'https'],
     disallowedTagsMode: 'discard',
     // Disallow executable, frame injection, and form manipulation tags
     exclusiveFilter: (frame) => {
-        return ['script', 'iframe', 'object', 'embed', 'form', 'input', 'button', 'textarea', 'select'].includes(frame.tag);
+        // Reject dangerous tags
+        if (['script', 'iframe', 'object', 'embed', 'form', 'input', 'button', 'textarea', 'select'].includes(frame.tag)) {
+            return true;
+        }
+        // For img tags, only allow /assets/ paths or http(s) URLs
+        if (frame.tag === 'img' && frame.attribs.src) {
+            const src = frame.attribs.src;
+            const isSafe = src.startsWith('/assets/') || src.startsWith('http://') || src.startsWith('https://');
+            if (!isSafe) {
+                return true; // discard this img
+            }
+        }
+        return false;
     },
 };
 
