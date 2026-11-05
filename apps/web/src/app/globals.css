@@ -73,7 +73,12 @@ body {
   overflow: hidden;
 }
 
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: var(--font-heading);
   font-weight: 800;
   letter-spacing: -0.04em;
@@ -331,7 +336,7 @@ h1, h2, h3, h4, h5, h6 {
   box-shadow: 0 0 0 4px rgba(111, 76, 122, 0.12);
 }
 
-.address-bar-input:focus + .address-bar-leading-icon,
+.address-bar-input:focus+.address-bar-leading-icon,
 .address-bar-container:focus-within .address-bar-leading-icon {
   color: var(--color-primary);
 }
@@ -495,9 +500,11 @@ h1, h2, h3, h4, h5, h6 {
   0% {
     transform: translate(0, 0) scale(1);
   }
+
   50% {
     transform: translate(30px, -40px) scale(1.08);
   }
+
   100% {
     transform: translate(-30px, 30px) scale(0.95);
   }
@@ -1116,6 +1123,7 @@ h1, h2, h3, h4, h5, h6 {
     opacity: 0;
     transform: translateY(20px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -1184,4 +1192,22 @@ button:active {
   .home-title {
     font-size: 44px;
   }
+}
+
+/* ==========================================================================
+   Search Highlight — wraps matched query terms in results
+   ========================================================================== */
+
+.search-highlight {
+  background: var(--color-soft-pink-tint);
+  color: var(--color-primary);
+  font-weight: 600;
+  padding: 0 2px;
+  border-radius: 3px;
+  /* No transitions — highlighting should feel instant, not animated */
+}
+
+/* Fallback for browsers that don't support the background shorthand */
+mark.search-highlight {
+  background-color: rgba(232, 191, 209, 0.55);
 }

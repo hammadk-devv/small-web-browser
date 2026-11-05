@@ -3,10 +3,40 @@
 
 import { Site } from '@small-web/shared';
 import { useBrowser } from '@/context/BrowserContext';
+import { highlightSegments } from '@/lib/highlight';
 
 interface SearchResultsProps {
     results: Site[];
     onClose: () => void;
+}
+
+/**
+ * Renders a piece of text with all occurrences of `query` wrapped in <mark>.
+ * 
+ * WHY A SEPARATE COMPONENT: Extracting this from SearchResults keeps the
+ * parent's JSX readable and gives React a stable component identity to
+ * reconcile — future memoization (if ever needed) becomes a one-line change.
+ * 
+ * SECURITY: Uses React text nodes (`{segment.text}`) instead of
+ * `dangerouslySetInnerHTML`. Even if a snippet contained `<script>`, it would
+ * render as visible text, not execute.
+ */
+function HighlightedText({ text, query }: { text: string; query: string }) {
+    const segments = highlightSegments(text, query);
+
+    return (
+        <>
+            {segments.map((segment, index) =>
+                segment.isMatch ? (
+                    <mark key={index} className="search-highlight">
+                        {segment.text}
+                    </mark>
+                ) : (
+                    <span key={index}>{segment.text}</span>
+                )
+            )}
+        </>
+    );
 }
 
 export function SearchResults({ results, onClose }: SearchResultsProps) {
@@ -56,10 +86,25 @@ export function SearchResults({ results, onClose }: SearchResultsProps) {
                             }}
                         >
                             <div className="result-header">
-                                <h3 className="result-title">{site.title || 'Untitled Site'}</h3>
-                                <span className="result-address">{site.address}</span>
+                                <h3 className="result-title">
+                                    <HighlightedText
+                                        text={site.title || 'Untitled Site'}
+                                        query={searchQuery}
+                                    />
+                                </h3>
+                                <span className="result-address">
+                                    <HighlightedText
+                                        text={site.address}
+                                        query={searchQuery}
+                                    />
+                                </span>
                             </div>
-                            <p className="result-snippet">{site.snippet || ''}</p>
+                            <p className="result-snippet">
+                                <HighlightedText
+                                    text={site.snippet || ''}
+                                    query={searchQuery}
+                                />
+                            </p>
                         </div>
                     ))}
                 </div>

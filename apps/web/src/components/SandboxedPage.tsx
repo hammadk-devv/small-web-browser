@@ -5,31 +5,33 @@ import { useEffect, useRef } from 'react';
 import { useBrowser } from '@/context/BrowserContext';
 
 interface SandboxedPageProps {
-    html: string;
-    title: string;
+  html: string;
+  title: string;
 }
 
 export function SandboxedPage({ html, title }: SandboxedPageProps) {
-    const iframeRef = useRef<HTMLIFrameElement>(null);
-    const browser = useBrowser();
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const browser = useBrowser();
 
-    // Listen for link click navigation messages dispatched from the iframe
-    useEffect(() => {
-        const handleMessage = (event: MessageEvent) => {
-            // Security: accept messages only from our sandboxed iframe instance
-            if (event.source !== iframeRef.current?.contentWindow) return;
+  // Listen for link click navigation messages dispatched from the iframe
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      // Security: accept messages only from our sandboxed iframe instance
+      if (event.source !== iframeRef.current?.contentWindow) return;
 
-            if (event.data?.type === 'NAVIGATE' && typeof event.data.address === 'string') {
-                browser.navigate(event.data.address);
-            }
-        };
+      if (event.data?.type === 'NAVIGATE' && typeof event.data.address === 'string') {
+        browser.navigate(event.data.address);
+      }
+    };
 
-        window.addEventListener('message', handleMessage);
-        return () => window.removeEventListener('message', handleMessage);
-    }, [browser]);
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, [browser]);
 
-    // Inject base modern styling and interceptor script into the iframe HTML
-    const augmentedHtml = `
+  // The iframe body uses `contain: layout style` to scope user-published CSS
+  // to this iframe document. Combined with the API's exclusiveFilter, this
+  // prevents user-published overlays from covering the entire page.
+  const augmentedHtml = `
     <!DOCTYPE html>
     <html lang="en">
       <head>
@@ -54,9 +56,9 @@ export function SandboxedPage({ html, title }: SandboxedPageProps) {
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
             box-sizing: border-box;
+            contain: layout style;
           }
 
-          /* Default centered layout applied when no full-screen container (e.g. .site-wrap) is provided */
           body:not(:has(.site-wrap)) {
             max-width: 680px;
             margin: 40px auto;
@@ -169,14 +171,14 @@ export function SandboxedPage({ html, title }: SandboxedPageProps) {
     </html>
   `;
 
-    return (
-        <iframe
-            key={title}
-            ref={iframeRef}
-            srcDoc={augmentedHtml}
-            title={title}
-            sandbox="allow-scripts"
-            className="page-renderer"
-        />
-    );
+  return (
+    <iframe
+      key={title}
+      ref={iframeRef}
+      srcDoc={augmentedHtml}
+      title={title}
+      sandbox="allow-scripts"
+      className="page-renderer"
+    />
+  );
 }
